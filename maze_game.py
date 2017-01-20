@@ -16,22 +16,22 @@ def legal_move(move, current_1, current_2, maze):
         if maze[current_1, current_2 - 1] != '#':
             new_position = current_1, current_2 - 1
             return True, new_position
-def maze_step(move, current_1, current_2, new_maze, end_1, end_2, turn):
-    legal, new_position = legal_move(move, current_1, current_2, new_maze)
-    if legal == True:
-        print new_position[0]
-        print new_position[1]
-        new_maze[new_position[0], new_position[1]] = '.'
-        current_pos_1 = new_position[0]
-        current_pos_2 = new_position[1]
-        print new_maze
-
-        if new_maze[end_1, end_2] != '.':
-            maze_game(new_maze, turn + 1, current_pos_1, current_pos_2)
-        else:
-            print "You win!"
-
-        return legal
+# def maze_step(move, current_1, current_2, new_maze, end_1, end_2, turn):
+#     legal, new_position = legal_move(move, current_1, current_2, new_maze)
+#     if legal == True:
+#         print new_position[0]
+#         print new_position[1]
+#         new_maze[new_position[0], new_position[1]] = '.'
+#         current_pos_1 = new_position[0]
+#         current_pos_2 = new_position[1]
+#         print new_maze
+#
+#         if new_maze[end_1, end_2] != '.':
+#             maze_game(new_maze, turn + 1, current_pos_1, current_pos_2)
+#         else:
+#             print "You win!"
+#
+#         return legal
 
 def maze_game(maze, turn =1, current_1 =0, current_2 = 0):
 
@@ -53,10 +53,23 @@ def maze_game(maze, turn =1, current_1 =0, current_2 = 0):
 
         move = raw_input("Where would you like to move (up, down, left, or right)?")
         # legal, new_position = legal_move(move, current_1, current_2, new_maze)
-        legal = maze_step(move, current_1, current_2, new_maze, end_1, end_2, turn)
+
+        legal, new_position = legal_move(move, current_1, current_2, maze)
         if legal != True:
             print "That is an impossible move, please select a new move"
             continue
+        print new_position[0]
+        print new_position[1]
+        new_maze[new_position[0], new_position[1]] = '.'
+        current_pos_1 = new_position[0]
+        current_pos_2 = new_position[1]
+        print new_maze
+
+        if new_maze[end_1, end_2] != '.':
+            maze_game(new_maze, turn + 1, current_pos_1, current_pos_2)
+        else:
+            print "Maze completed!"
+
         break
     return new_maze
 
