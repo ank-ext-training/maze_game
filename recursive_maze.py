@@ -12,17 +12,25 @@ maze = np.array([['#', '#', 'E', '#', '#'],
                      ['#', ' ', ' ', ' ', 'S']])
 current_row = int(str(np.where(maze == 'S'))[8])
 current_column = int(str(np.where(maze == 'S'))[20])
-end_1 = str(np.where(maze == 'E'))[8]
-end_2 = str(np.where(maze == 'E'))[20]
+if 'E' in maze:
+    end_1 = str(np.where(maze == 'E'))[8]
+    end_2 = str(np.where(maze == 'E'))[20]
+else:
+    end_1 = None
+    end_2 = None
 number_rows = maze.shape[0]-1
 number_columns = maze.shape[1]-1
 
 def recursive_maze(maze, current_row, current_column, end1, end2, number_of_rows, number_of_columns):
     new_maze = maze.copy()
+    if end1 == None or end_2 == None:
+        print "This maze has no exit!"
+        return new_maze
     if new_maze[end1, end2] == '.':
         print "Maze Completed!"
+        print new_maze
         return new_maze
-    if new_maze[end_1, end_2] != '.':
+    elif new_maze[end_1, end_2] != '.':
         possibilities = ["up", "down", "right", "left"]
         for move in possibilities:
             reset_row = current_row
