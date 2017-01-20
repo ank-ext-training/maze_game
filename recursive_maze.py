@@ -27,9 +27,6 @@ def recursive_maze(maze, current_row, current_column, end1, end2, number_of_rows
     if new_maze[end_1, end_2] != '.':
         possibilities = ["up", "down", "right", "left"]
         for move in possibilities:
-            if new_maze[end1, end2] == '.':
-                print "Maze Completed!"
-                return new_maze
             reset_row = current_row
             reset_column = current_column
             if move.lower() == possibilities[0]:
@@ -54,11 +51,8 @@ def recursive_maze(maze, current_row, current_column, end1, end2, number_of_rows
                 new_maze[current_row, current_column] = '.'
                 recursive_maze(new_maze, current_row, current_column, end_1, end_2, number_rows,number_columns)
             recursive_maze(new_maze, reset_row, reset_column, end_1, end_2,number_rows, number_columns)
-            if new_maze[end_1, end_2] != 'E':
-                print "This is an unsolvable maze!"
-recursive_maze(maze, current_row, current_column, end_1, end_2, number_rows, number_columns)
 
+    else:
+        print "This is an unsolvable maze!"
 
-
-
-
+recursive_maze(maze, current_row, current_column
