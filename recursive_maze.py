@@ -37,8 +37,6 @@ def recursive_maze(maze, current_row, current_column, end1, end2, number_of_rows
             reset_column = current_column
             legal, current_row, current_column = legal_move.legal_move(move, current_row, current_column, new_maze, number_rows, number_columns)
             if legal == False:
-                current_row = reset_row
-                current_column = reset_column
                 continue
 
             else:
