@@ -19,7 +19,6 @@ def legal_move(move, current_1, current_2, maze, number_rows, number_columns):
     if maze[current_1, current_2] != '#':
         return True, current_1, current_2
 
-
 def maze_step(move, current_1, current_2, new_maze, number_rows, number_columns):
     print current_1, current_2
     legal, current_1, current_2 = legal_move(move, current_1, current_2, new_maze, number_rows, number_columns)
@@ -29,7 +28,6 @@ def maze_step(move, current_1, current_2, new_maze, number_rows, number_columns)
 
     else:
         return False, new_maze, current_1, current_2
-
 
 def maze_game(maze):
     start_1 = str(np.where(maze=='S'))[8]
@@ -47,7 +45,6 @@ def maze_game(maze):
         print new_maze
         move = raw_input("Where would you like to move (up, down, left, or right)? \n")
         legal, new_maze, current_1, current_2 = maze_step(move, current_1, current_2, new_maze, number_rows, number_columns)
-        print current_1, current_2
         if not legal:
             print "\n That is an impossible move, please select a new move"
             continue
