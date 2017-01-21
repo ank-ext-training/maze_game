@@ -25,16 +25,14 @@ def recursive_maze(maze, current_row, current_column, end1, end2, number_of_rows
     new_maze = maze.copy()
     if end1 == None or end_2 == None:
         print "This maze has no exit!"
-        return new_maze
+        return None
     if new_maze[end1, end2] == '.':
         print "Maze Completed!"
         print new_maze
-        return new_maze
+        return True
     elif new_maze[end_1, end_2] != '.':
         possibilities = ["up", "down", "right", "left"]
         for move in possibilities:
-            reset_row = current_row
-            reset_column = current_column
             legal, current_row, current_column = legal_move.legal_move(move, current_row, current_column, new_maze, number_rows, number_columns)
             if legal == False:
                 continue
@@ -42,9 +40,9 @@ def recursive_maze(maze, current_row, current_column, end1, end2, number_of_rows
             else:
                 new_maze[current_row, current_column] = '.'
                 recursive_maze(new_maze, current_row, current_column, end_1, end_2, number_rows,number_columns)
-            recursive_maze(new_maze, reset_row, reset_column, end_1, end_2,number_rows, number_columns)
+            print new_maze
 
     else:
         print "This is an unsolvable maze!"
-
+        return 0
 recursive_maze(maze, current_row, current_column, end_1, end_2, number_rows, number_columns)
