@@ -1,27 +1,30 @@
 import unittest
 import numpy as np
-from legal_move import legal_move
+from supporting import legal_move, maze_initialization
+
+
 maze_grid = np.array([['#', '#', 'E', '#', '#'],
-                          [' ', ' ', ' ', '#', '#'],
-                          ['#', ' ', '#', '#', '#'],
-                          [' ', ' ', '#', ' ', '#'],
-                          ['#', ' ', ' ', ' ', '#'],
-                     ['#', ' ', '#', ' ', '#'],
-                     [' ', ' ', '#', ' ', '#'],
-                     ['#', '#', ' ', ' ', '#'],
-                     ['#', ' ', ' ', '#', '#'],
-                     ['#', ' ', ' ', ' ', 'S']])
+                      [' ', ' ', ' ', '#', '#'],
+                      ['#', ' ', '#', '#', '#'],
+                      [' ', ' ', '#', ' ', '#'],
+                      ['#', ' ', ' ', ' ', '#'],
+                      ['#', ' ', '#', ' ', '#'],
+                      [' ', ' ', '#', ' ', '#'],
+                      ['#', '#', ' ', ' ', '#'],
+                      ['#', ' ', ' ', '#', '#'],
+                      ['#', ' ', ' ', ' ', 'S']])
 
 maze_grid2 = np.array([['#', '#', 'E', '#', '#'],
-                          [' ', ' ', ' ', '#', '#'],
-                          ['#', ' ', '#', '#', '#'],
-                          [' ', ' ', '#', ' ', '#'],
-                          ['#', ' ', ' ', ' ', '#'],
-                     ['#', ' ', '#', ' ', '#'],
-                     [' ', ' ', '#', ' ', '#'],
-                     ['#', '#', ' ', ' ', '#'],
-                     ['#', ' ', ' ', '#', '#'],
-                     ['#', ' ', '.', '.', 'S']])
+                      [' ', ' ', ' ', '#', '#'],
+                      ['#', ' ', '#', '#', '#'],
+                      [' ', ' ', '#', ' ', '#'],
+                      ['#', ' ', ' ', ' ', '#'],
+                      ['#', ' ', '#', ' ', '#'],
+                      [' ', ' ', '#', ' ', '#'],
+                      ['#', '#', ' ', ' ', '#'],
+                      ['#', ' ', ' ', '#', '#'],
+                      ['#', ' ', '.', '.', 'S']])
+
 
 class TestMaze(unittest.TestCase):
 
@@ -76,3 +79,14 @@ class TestMaze(unittest.TestCase):
         self.assertTrue(actual_result1 == expected_result1)
         self.assertTrue(actual_result2 == expected_result2)
         self.assertTrue(actual_result3 == expected_result3)
+
+    def test_backtracking(self):
+        #TODO
+        pass
+
+    def test_maze_initialization(self):
+        #TODO:
+        pass
+
+if __name__ == "__main__":
+    unittest.main()
