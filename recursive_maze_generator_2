@@ -36,7 +36,7 @@ def neighbor(maze, row, column, maxdim):
 
 
 
-def generate_a_maze(dimension, maze_grid = None, start_row = None, start_column = None, end_row = None, end_column = None, backtracking_list = [], dead_end_list = []):
+def generate_a_maze(dimension, maze_grid = None, start_row = None, start_column = None, end_row = None, end_column = None, initial_row = None, initial_column = None, backtracking_list = [], dead_end_list = []):
 
     # initial setup of maze shell, put into different function once this one works properly
     if maze_grid is None:
@@ -46,6 +46,8 @@ def generate_a_maze(dimension, maze_grid = None, start_row = None, start_column 
         maze_grid[dimension - 1, random.randint(0, dimension - 1)] = 'S'
         start_row, start_column = np.where(maze_grid == 'S')
         start_row, start_column = (int(start_row[0]), int(start_column[0]))
+        initial_row = start_row
+        initial_column = start_column
         end_row, end_column = np.where(maze_grid == 'E')
         end_row, end_column = (int(end_row[0]), int(end_column[0]))
     backtracking_list.append((start_row, start_column))
@@ -71,7 +73,7 @@ def generate_a_maze(dimension, maze_grid = None, start_row = None, start_column 
 
         print "end", end_row, end_column
         print "backtracking list", backtracking_list
-        solution = generate_a_maze(dimension, maze_grid = maze_grid, start_row=new_row, start_column=new_column,end_row=end_row, end_column=end_column, backtracking_list=backtracking_list, dead_end_list=dead_end_list)
+        solution = generate_a_maze(dimension, maze_grid = maze_grid, start_row=new_row, start_column=new_column,end_row=end_row, end_column=end_column, initial_row=initial_row, initial_column=initial_column, backtracking_list=backtracking_list, dead_end_list=dead_end_list)
         # print "solved", solved
         print "solution"
         print solution
@@ -119,5 +121,7 @@ def generate_a_maze(dimension, maze_grid = None, start_row = None, start_column 
         print maze_grid
         print
         print
+        maze_grid[initial_row, initial_column] = 'S'
+        maze_grid[end_row, end_column] = 'E'
         return maze_grid
 generate_a_maze(4)
