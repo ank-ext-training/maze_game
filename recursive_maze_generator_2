@@ -1,21 +1,28 @@
-     
-
-import numpy as np
+  import numpy as np
 import random
 
 def neighbor(maze, row, column, maxdim):
     open_neighbors = []
+    potential_move = []
     if row+1 < maxdim and (maze[row+1, column] == 'o' or maze[row+1, column] == 'E'):
         open_neighbors.append((row+1, column))
+        print "down"
+        # potential_move.append('| |')
 
     if row-1 >=0 and (maze[row-1, column] == 'o' or maze[row-1, column] == 'E'):
         open_neighbors.append((row-1, column))
+        print "up"
+        # potential_move.append('| |')
 
     if column+1<maxdim and (maze[row, column + 1] == 'o' or maze[row, column + 1] == 'E'):
         open_neighbors.append((row, column+1))
+        print "right"
+        # potential_move.append('=')
 
     if column-1 >=0 and (maze[row, column - 1] == 'o' or maze[row, column - 1] == 'E'):
         open_neighbors.append((row, column-1))
+        print "left"
+        # potential_move.append('=')
 
     if open_neighbors:
         print "neighbor function print statement: True"
@@ -39,32 +46,27 @@ def generate_a_maze(dimension, maze_grid = None, start_row = None, start_column 
         start_row, start_column = (int(start_row[0]), int(start_column[0]))
         end_row, end_column = np.where(maze_grid == 'E')
         end_row, end_column = (int(end_row[0]), int(end_column[0]))
+    backtracking_list.append((start_row, start_column))
     print maze_grid
+    print "backtracking list at the start of new function call", backtracking_list
     # termination condition
     #     possibility 1
-    if 'o' not in maze_grid:
+    if not backtracking_list:
         # all cells should be visited
-        return maze_grid
-
+        return True, maze_grid
+    print "checking neighhbor for", start_row, start_column
     neighbor_available, open_neighbors = neighbor(maze_grid, start_row, start_column, dimension-1)
+    print "neighbor available", neighbor_available
 
     print "open neighbors", open_neighbors
     if neighbor_available:
-        backtracking_list.append((start_row, start_column))
         new_row, new_column = random.choice(open_neighbors)
 
-        print "new row", new_row
-        print  "new column", new_column
 
         maze_grid[start_row, start_column] = '.'  # mark as visited
-        print
-        print
+
 #             maybe put end row and maze shell making steps in separate functions like in recursive maze solver?
-        print "latest backtracking location at current level", backtracking_list[-1]
-        print
-        print "dimension", dimension
-        print "row", new_row
-        print "column", new_column
+
         print "end", end_row, end_column
         print "backtracking list", backtracking_list
         solution = generate_a_maze(dimension, maze_grid = maze_grid, start_row=new_row, start_column=new_column,end_row=end_row, end_column=end_column, backtracking_list=backtracking_list, dead_end_list=dead_end_list)
@@ -81,6 +83,7 @@ def generate_a_maze(dimension, maze_grid = None, start_row = None, start_column 
         #     # # dead_end_list.append((start_row, start_column))
         #     # return False, None
     else:
+        print "curent", start_row, start_column
         dead_end_list.append((start_row,start_column))
         print "dead end list", dead_end_list
         print backtracking_list
@@ -89,21 +92,26 @@ def generate_a_maze(dimension, maze_grid = None, start_row = None, start_column 
             print "row", i
             print "column", j
             print maze_grid
+            # maze_grid[i,j] = 'o'
+            # dead_end_list.append((i,j))
+            neighbor_available_backtrack, open_neighbors_backtrack = neighbor(maze_grid, i, j, dimension-1)
+            print "neighbor function return value:", neighbor_available_backtrack
+            print "open neighbors", open_neighbors_backtrack
+            print neighbor_available_backtrack
             print
             print
-            maze_grid[i,j] = 'o'
-            dead_end_list.append((i,j))
-            neighbor_available, open_neighbors = neighbor(maze_grid, i, j, dimension-1)
-            print "neighbor function return value:", neighbor_available
-            print "open neighbors", open_neighbors
-            print neighbor_available
-            if open_neighbors == None:
+            if open_neighbors_backtrack == None:
                 backtracking_list.remove((i, j))
+                dead_end_list.append((i,j))
+                maze_grid[i,j] = '#'
                 print "continuing for loop"
+                print
+                print
                 continue
 
+
             print "first open position in backtracking_list", i, j
-            print open_neighbors
+            print open_neighbors_backtrack
             print
             print
             start_row, start_column = i, j
@@ -111,16 +119,7 @@ def generate_a_maze(dimension, maze_grid = None, start_row = None, start_column 
 
 
         print maze_grid
+        print
+        print
         return maze_grid
-generate_a_maze(5)
-
-# if (start_row, start_column) in backtracking_list:
-        #     backtracking_list.remove((start_row, start_column))
-        # start_row, start_column = backtracking_list.pop()
-        # print backtracking_list
-        # print "reached a dead end, new starting position is", start_row, start_column
-        #
-        # print
-        # # generate_a_maze(dimension, maze_grid=maze_grid, start_row=start_row, start_column=start_column, end_row=end_row,
-        # #                 end_column=end_column, backtracking_list=backtracking_list, dead_end_list=dead_end_list)
-        # return False, maze_grid_backtrack # ignore that entire branch
+generate_a_maze(4)
