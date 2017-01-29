@@ -1,10 +1,12 @@
-  import numpy as np
+import numpy as np
 import random
 
 def neighbor(maze, row, column, maxdim):
     open_neighbors = []
     potential_move = []
-    if row+1 < maxdim and (maze[row+1, column] == 'o' or maze[row+1, column] == 'E'):
+    print "in neighbor function, current position is", row, column
+    print "max row/columns", maxdim+1
+    if row+1 <= maxdim and (maze[row+1, column] == 'o' or maze[row+1, column] == 'E'):
         open_neighbors.append((row+1, column))
         print "down"
         # potential_move.append('| |')
@@ -14,7 +16,7 @@ def neighbor(maze, row, column, maxdim):
         print "up"
         # potential_move.append('| |')
 
-    if column+1<maxdim and (maze[row, column + 1] == 'o' or maze[row, column + 1] == 'E'):
+    if column+1<=maxdim and (maze[row, column + 1] == 'o' or maze[row, column + 1] == 'E'):
         open_neighbors.append((row, column+1))
         print "right"
         # potential_move.append('=')
@@ -83,14 +85,10 @@ def generate_a_maze(dimension, maze_grid = None, start_row = None, start_column 
         #     # # dead_end_list.append((start_row, start_column))
         #     # return False, None
     else:
-        print "curent", start_row, start_column
-        dead_end_list.append((start_row,start_column))
-        print "dead end list", dead_end_list
-        print backtracking_list
-
         for i, j in backtracking_list[::-1]:
-            print "row", i
-            print "column", j
+            print "curent position is", i, j
+            print "dead end list is", dead_end_list
+            print "backtracking list is", backtracking_list
             print maze_grid
             # maze_grid[i,j] = 'o'
             # dead_end_list.append((i,j))
@@ -103,7 +101,7 @@ def generate_a_maze(dimension, maze_grid = None, start_row = None, start_column 
             if open_neighbors_backtrack == None:
                 backtracking_list.remove((i, j))
                 dead_end_list.append((i,j))
-                maze_grid[i,j] = '#'
+                maze_grid[i,j] = '.'
                 print "continuing for loop"
                 print
                 print
