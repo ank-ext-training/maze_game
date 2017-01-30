@@ -1,0 +1,122 @@
+import numpy as np
+import random
+
+def neighbor(maze, row, column, maxdim):
+    open_neighbors = []
+    potential_move = [] #will use this when trying to build walls
+    print "in neighbor function, current position is", row, column
+    if row+1 <= maxdim and (maze[row+1, column] == 'o' or maze[row+1, column] == 'E'):
+        open_neighbors.append((row+1, column))
+        print "down"
+        # potential_move.append('| |')
+
+    if row-1 >=0 and (maze[row-1, column] == 'o' or maze[row-1, column] == 'E'):
+        open_neighbors.append((row-1, column))
+        print "up"
+        # potential_move.append('| |')
+
+    if column+1<=maxdim and (maze[row, column + 1] == 'o' or maze[row, column + 1] == 'E'):
+        open_neighbors.append((row, column+1))
+        print "right"
+        # potential_move.append('=')
+
+    if column-1 >=0 and (maze[row, column - 1] == 'o' or maze[row, column - 1] == 'E'):
+        open_neighbors.append((row, column-1))
+        print "left"
+        # potential_move.append('=')
+
+    if open_neighbors:
+        print "neighbor available: True"
+        print
+        return True, open_neighbors
+
+    print "neighbor available: False"
+    print
+    return False, None
+
+
+
+
+def generate_a_maze(dimension, maze_grid = None, start_row = None, start_column = None, end_row = None, end_column = None, initial_row = None, initial_column = None, backtracking_list = [], dead_end_list = []):
+
+    # initial setup of maze shell, put into different function once this one works properly
+    if maze_grid is None:
+        maze_grid = np.chararray((dimension, dimension))
+        maze_grid[:] = 'o'
+        maze_grid[0, random.randint(0, dimension - 1)] = 'E'
+        maze_grid[dimension - 1, random.randint(0, dimension - 1)] = 'S'
+        start_row, start_column = np.where(maze_grid == 'S')
+        start_row, start_column = (int(start_row[0]), int(start_column[0]))
+        initial_row = start_row
+        initial_column = start_column
+        end_row, end_column = np.where(maze_grid == 'E')
+        end_row, end_column = (int(end_row[0]), int(end_column[0]))
+    backtracking_list.append((start_row, start_column))
+    print maze_grid
+    print "backtracking list at the start of new function call", backtracking_list
+    if not backtracking_list:
+        # need to backtrack all the way until at initial point/S
+        return maze_grid
+
+    print "checking neighhbor for", start_row, start_column
+    neighbor_available, open_neighbors = neighbor(maze_grid, start_row, start_column, dimension-1)
+    print "open neighbors are", open_neighbors
+    if neighbor_available:
+        new_row, new_column = random.choice(open_neighbors)
+        # randomly pick a new position to visit from possible neighbors list
+
+
+        maze_grid[start_row, start_column] = '.'  # mark as visited
+
+#             maybe put end row and maze shell making steps in separate functions like in recursive maze solver?
+        solution = generate_a_maze(dimension, maze_grid = maze_grid, start_row=new_row, start_column=new_column,end_row=end_row, end_column=end_column, initial_row=initial_row, initial_column=initial_column, backtracking_list=backtracking_list, dead_end_list=dead_end_list)
+        # print "solved", solved
+        print "solution"
+        print solution
+        if solution is not None:
+            return maze_grid
+
+        print
+        # if solved:
+        #         return True, solution
+        # else:
+        #     # # dead_end_list.append((start_row, start_column))
+        #     # return False, None
+    else:
+        # when no neighbors are available, start backtracking
+        for i, j in backtracking_list[::-1]:
+            print "curent position is", i, j
+            print "dead end list is", dead_end_list
+            print "backtracking list is", backtracking_list
+            print maze_grid
+
+            neighbor_available_backtrack, open_neighbors_backtrack = neighbor(maze_grid, i, j, dimension-1)
+            print "neighbors available for backtracking:", neighbor_available_backtrack
+            print "open neighbors", open_neighbors_backtrack
+            print neighbor_available_backtrack
+            print
+            print
+            if open_neighbors_backtrack == None:
+                backtracking_list.remove((i, j))
+                dead_end_list.append((i,j))
+                maze_grid[i,j] = '.'
+                # mark as visited to create dead ends in the final maze
+                print "continuing for loop"
+                print
+                print
+                continue
+
+
+            print "first open position in backtracking_list", i, j
+            print "can move to", open_neighbors_backtrack
+            start_row, start_column = i, j
+            break
+
+
+        print maze_grid
+        print
+        print
+        maze_grid[initial_row, initial_column] = 'S'
+        maze_grid[end_row, end_column] = 'E'
+        return maze_grid
+generate_a_maze(4)
