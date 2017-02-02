@@ -1,0 +1,71 @@
+import random
+import numpy as np
+
+
+def neighbor(maze, row, column, maxdim):
+    open_neighbors = []
+    print "in neighbor function, current position is", row, column
+    if row+1 <= maxdim and (maze[row+1, column] == 'o' or maze[row+1, column] == 'E'):
+        open_neighbors.append((row+1, column))
+
+    if row-1 >= 0 and (maze[row-1, column] == 'o' or maze[row-1, column] == 'E'):
+        open_neighbors.append((row-1, column))
+
+    if column+1 <= maxdim and (maze[row, column + 1] == 'o' or maze[row, column + 1] == 'E'):
+        open_neighbors.append((row, column+1))
+
+    if column-1 >=0 and (maze[row, column - 1] == 'o' or maze[row, column - 1] == 'E'):
+        open_neighbors.append((row, column-1))
+
+    if open_neighbors:
+        print "neighbor available: True"
+        print
+        return True, open_neighbors
+
+    print "neighbor available: False"
+    print
+    return False, None
+
+def breadth_first_search(dimension):
+    visited_cells = []
+    path_list = []
+    maze_grid = np.chararray((dimension, dimension))
+    maze_grid[:] = 'o'
+    maze_grid[0, random.randint(0, dimension - 1)] = 'E'
+    maze_grid[dimension - 1, random.randint(0, dimension - 1)] = 'S'
+    start_row, start_column = np.where(maze_grid == 'S')
+    start_row, start_column = (int(start_row[0]), int(start_column[0]))
+    initial_row = start_row
+    initial_column = start_column
+    end_row, end_column = np.where(maze_grid == 'E')
+    recursion_level = 0
+    end_row, end_column = (int(end_row[0]), int(end_column[0]))
+    visited_cells.append((start_row, start_column))
+    while visited_cells:
+        print "position is", start_row, start_column
+        neighbor_available, neighbors_list = neighbor(maze_grid, start_row, start_column, dimension-1)
+        if neighbor_available:
+            start_row, start_column = random.choice(neighbors_list)
+            # visited_cells.append((start_row, start_column))
+
+            maze_grid[start_row, start_column] = '.'
+            for i, j in neighbors_list:
+                if i == end_row and j == end_column:
+                    print "yes"
+                    path_list.append((start_row, start_column))
+                    start_row = end_row
+                    start_column = end_column
+                    path_list.append((start_row, start_column))
+                    return path_list
+            print "new position will be", start_row, start_column
+        current = visited_cells.pop(0)
+        print "current", current
+        if not current in path_list:
+            path_list.append((current))
+            visited_cells.append(current)
+        print "visited", visited_cells
+        print "path list",path_list
+        print "the current position is", start_row, start_column
+        print maze_grid
+
+breadth_first_search(4)
