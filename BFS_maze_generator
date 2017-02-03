@@ -1,0 +1,101 @@
+import random
+import numpy as np
+
+
+def neighbor(maze, row, column, maxdim):
+    open_neighbors = []
+    print "in neighbor function, current position is", row, column
+    if row+1 <= maxdim and (maze[row+1, column] == 'o' or maze[row+1, column] == 'E'):
+        open_neighbors.append((row+1, column))
+
+    if row-1 >= 0 and (maze[row-1, column] == 'o' or maze[row-1, column] == 'E'):
+        open_neighbors.append((row-1, column))
+
+    if column+1 <= maxdim and (maze[row, column + 1] == 'o' or maze[row, column + 1] == 'E'):
+        open_neighbors.append((row, column+1))
+
+    if column-1 >=0 and (maze[row, column - 1] == 'o' or maze[row, column - 1] == 'E'):
+        open_neighbors.append((row, column-1))
+
+    if open_neighbors:
+        print "neighbor available: True"
+        print
+        return True, open_neighbors
+
+    print "neighbor available: False"
+    print
+    return False, None
+
+def breadth_first_search(dimension):
+
+    path_list = {}
+    length_of_paths = []
+    maze_grid_initial = np.chararray((dimension, dimension))
+    maze_grid_initial[:] = 'o'
+    maze_grid_initial[0, random.randint(0, dimension - 1)] = 'E'
+    maze_grid_initial[dimension - 1, random.randint(0, dimension - 1)] = 'S'
+    start_row, start_column = np.where(maze_grid_initial == 'S')
+    start_row, start_column = (int(start_row[0]), int(start_column[0]))
+    initial_row = start_row
+    initial_column = start_column
+    end_row, end_column = np.where(maze_grid_initial == 'E')
+    end_row, end_column = (int(end_row[0]), int(end_column[0]))
+    # visited_cells.append((start_row, start_column))
+    maze_grid_initial[start_row, start_column] = '.'
+    maze_grid = maze_grid_initial.copy()
+    neighbor_available_initial, neighbors_list_initial = neighbor(maze_grid, start_row, start_column, dimension-1)
+
+    print "neighbors list intial is", neighbors_list_initial
+
+    for i in neighbors_list_initial:
+        maze_grid[:] = 'o'
+        maze_grid[end_row, end_column] = 'E'
+        maze_grid[initial_row, initial_column]='.'
+        print maze_grid
+        print i
+
+        visited_cells = [(initial_row, initial_column)]
+        neighbor_row, neighbor_column = i[0], i[1]
+        print "neighbor row, column is", neighbor_row, neighbor_column
+        print "starting at", start_row, start_column
+        print "visited cells list before while loop", visited_cells
+        visited_cells.append((start_row, start_column))
+        while visited_cells:
+
+
+            # while (start_row, start_column)!= (end_row, end_column):
+            neighbor_available, neighbors_list = neighbor(maze_grid, start_row, start_column, dimension - 1)
+            if neighbor_available:
+                start_row, start_column = random.choice(neighbors_list)
+                maze_grid[start_row, start_column] = '.'
+                visited_cells.append((start_row, start_column))
+                if maze_grid[end_row, end_column] == '.':
+                    path_list[(neighbor_row, neighbor_column)] = visited_cells
+                    length_of_paths.append(len(visited_cells))
+                    print "path", path_list
+                    break
+            else:
+                break
+
+    print length_of_paths
+    ind = length_of_paths.index(min(length_of_paths))
+    print ind
+    # path_chosen = path_list(1)
+    # indexing in dictionaries?
+    # print path_chosen
+
+
+
+
+    #
+    #             print "new position will be", start_row, start_column
+    #         current = (start_row, start_column)
+    #         print "current", current
+    #         print "visited", visited_cells
+    #         if not current in path_list:
+    #             visited_cells.append(current)
+    #         print "path list", path_list
+    #         print "the current position is", start_row, start_column
+    #         print maze_grid
+    # print path_list
+breadth_first_search(5)
