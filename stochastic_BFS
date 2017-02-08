@@ -1,0 +1,135 @@
+import random
+import numpy as np
+
+
+def neighbor(maze, row, column, maxdim):
+    open_neighbors = []
+    moves = []
+    if row+1 <= maxdim and (maze[row+1, column] == 'o' or maze[row+1, column] == 'E'):
+        open_neighbors.append((row+1, column))
+        move = "down"
+        moves.append(move)
+
+    if row-1 >= 0 and (maze[row-1, column] == 'o' or maze[row-1, column] == 'E'):
+        open_neighbors.append((row-1, column))
+        move = "up"
+        moves.append(move)
+
+    if column+1 <= maxdim and (maze[row, column + 1] == 'o' or maze[row, column + 1] == 'E'):
+        open_neighbors.append((row, column+1))
+        move = "right"
+        moves.append(move)
+
+    if column-1 >=0 and (maze[row, column - 1] == 'o' or maze[row, column - 1] == 'E'):
+        open_neighbors.append((row, column-1))
+        move = "left"
+        moves.append(move)
+
+    if open_neighbors:
+        print "neighbor available: True"
+        print
+        rand_index = random.randint(0, len(open_neighbors)-1)
+        new_position = open_neighbors[rand_index]
+        move = moves[rand_index]
+        return True, open_neighbors, move, new_position
+
+    print "neighbor available: False"
+    print
+    return False, None, None, None
+
+
+
+def find_move_symbol(move):
+    print "inside move symbol function: move is", move
+    if move == "up":
+        move_symbol = '^'
+    if move == "down":
+        move_symbol = '|'
+    if move == "left":
+        move_symbol = '<'
+    if move == "right":
+        move_symbol = '>'
+    return move_symbol
+
+
+
+def breadth_first_search(dimension):
+
+    maze_grid_initial = np.chararray((dimension, dimension))
+    maze_grid_initial[:] = 'o'
+    maze_grid_initial[0, random.randint(0, dimension - 1)] = 'E'
+    maze_grid_initial[dimension - 1, random.randint(0, dimension - 1)] = 'S'
+    start_row, start_column = np.where(maze_grid_initial == 'S')
+    start_row, start_column = (int(start_row[0]), int(start_column[0]))
+    initial_row = start_row
+    initial_column = start_column
+    end_row, end_column = np.where(maze_grid_initial == 'E')
+    end_row, end_column = (int(end_row[0]), int(end_column[0]))
+    maze_grid = maze_grid_initial.copy()
+    neighbor_available_initial, neighbors_list_initial, move, new_position = neighbor(maze_grid, start_row, start_column, dimension-1)
+
+    print "start at", start_row, start_column
+    print "end at", end_row, end_column
+
+    leaves = []
+    stems = []
+    path = []
+
+    print "neighbors list", neighbors_list_initial
+    print "new position", new_position
+    print "move", move
+
+    start_row, start_column = new_position[0], new_position[1]
+
+    move_symbol = find_move_symbol(move)
+    maze_grid[start_row, start_column] = move_symbol
+    path.append((initial_row,initial_column))
+    path.append((start_row, start_column))
+    leaves.append((start_row, start_column))
+
+    while 'o' in maze_grid:
+
+        neighbor_available, neighbors_list, move, new_position = neighbor(maze_grid, start_row, start_column, dimension-1)
+        if neighbors_list:
+            leaves.append(new_position)
+            print "yes, neighbors are available"
+            start_row, start_column = new_position[0], new_position[1]
+            print "move is", move
+            print type(move)
+            move_symbol = find_move_symbol(move)
+            maze_grid[start_row, start_column] = move_symbol
+            print "position", new_position
+            print "position added to leaves list"
+
+        else:
+            leaves.remove((start_row, start_column))
+            if (start_row, start_column) not in stems:
+                stems.append((start_row, start_column))
+                print "position", start_row, start_column
+                print "position added to stems list"
+                # maze_grid[start_row, start_column] = 'x'
+
+        randomly_selected_leaf = leaves[random.randint(0, len(leaves)-1)]
+        start_row = randomly_selected_leaf[0]
+        start_column = randomly_selected_leaf[1]
+        path.append((start_row, start_column))
+
+        print maze_grid
+        print
+        print
+
+    print "leaves", leaves
+    print "stems", stems
+    print "path", path
+
+
+    for i in stems:
+        maze_grid[i] = 's'
+    for i in leaves:
+        maze_grid[i] = 'l'
+    maze_grid[end_row, end_column] = 'E'
+    maze_grid[initial_row, initial_column] = 'S'
+    print maze_grid
+
+
+breadth_first_search(5)
