@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import random
 import numpy as np
 
@@ -66,7 +67,7 @@ def breadth_first_search(dimension):
     end_row, end_column = np.where(maze_grid_initial == 'E')
     end_row, end_column = (int(end_row[0]), int(end_column[0]))
     maze_grid = maze_grid_initial.copy()
-    neighbor_available_initial, neighbors_list_initial, move, new_position = neighbor(maze_grid, start_row, start_column, dimension-1)
+    maze_grid_numbered = maze_grid_initial.copy()
 
     print "start at", start_row, start_column
     print "end at", end_row, end_column
@@ -74,18 +75,8 @@ def breadth_first_search(dimension):
     leaves = []
     stems = []
     path = []
+    # linkage = LinkedList
 
-    print "neighbors list", neighbors_list_initial
-    print "new position", new_position
-    print "move", move
-
-    start_row, start_column = new_position[0], new_position[1]
-
-    move_symbol = find_move_symbol(move)
-    maze_grid[start_row, start_column] = move_symbol
-    path.append((initial_row,initial_column))
-    path.append((start_row, start_column))
-    leaves.append((start_row, start_column))
 
     while 'o' in maze_grid:
 
@@ -100,6 +91,15 @@ def breadth_first_search(dimension):
             maze_grid[start_row, start_column] = move_symbol
             print "position", new_position
             print "position added to leaves list"
+            if len(neighbors_list) == 1:
+                maze_grid_numbered[start_row, start_column] = 1
+            if len(neighbors_list) == 2:
+                maze_grid_numbered[start_row, start_column] = 2
+            if len(neighbors_list) == 3:
+                maze_grid_numbered[start_row, start_column] = 3
+            if len(neighbors_list) == 4:
+                maze_grid_numbered[start_row, start_column] = 4
+
 
         else:
             leaves.remove((start_row, start_column))
@@ -107,12 +107,13 @@ def breadth_first_search(dimension):
                 stems.append((start_row, start_column))
                 print "position", start_row, start_column
                 print "position added to stems list"
+                # maze_grid_numbered[start_row, start_column] = 0
+
                 # maze_grid[start_row, start_column] = 'x'
 
         randomly_selected_leaf = leaves[random.randint(0, len(leaves)-1)]
         start_row = randomly_selected_leaf[0]
         start_column = randomly_selected_leaf[1]
-        path.append((start_row, start_column))
 
         print maze_grid
         print
@@ -123,13 +124,22 @@ def breadth_first_search(dimension):
     print "path", path
 
 
-    for i in stems:
-        maze_grid[i] = 's'
-    for i in leaves:
-        maze_grid[i] = 'l'
+    for i in range(0, dimension):
+        for j in range(0, dimension):
+            print i,j
+            if maze_grid_numbered[i,j] == '3'  or maze_grid_numbered[i,j]=='1':
+                maze_grid_numbered[i,j] = 'o'
+            else:
+                maze_grid_numbered[i,j] = '#'
     maze_grid[end_row, end_column] = 'E'
     maze_grid[initial_row, initial_column] = 'S'
+    maze_grid_numbered[end_row, end_column] = 'E'
+    maze_grid_numbered[initial_row, initial_column] = 'S'
+
     print maze_grid
+    print
+    print maze_grid_numbered
+
 
 
 breadth_first_search(5)
